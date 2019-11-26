@@ -8,14 +8,13 @@ import datetime
 
 smtpUser = 'ZPItest1111@gmail.com'
 smtpPass = 'ZPItest1'
-toAdd = 'nikt2897@gmail.com'
+toAdd = 'laizer96@gmail.com'
 fromAdd = smtpUser
 
 subject = 'Wylacz gaz'
 header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
 body = 'Wylac gaz '
-# change these as desired - they're the pins connected from the
-# SPI port on the ADC to the Cobbler
+
 SPICLK = 11
 SPIMISO = 9
 SPIMOSI = 10
@@ -104,7 +103,7 @@ def main():
                           test = now.strftime("%Y-%m-%d %H:%M:%S")
                           print (test)
                           sendEmail()
-                          appendFile(test)
+                          #appendFile(test)
                           time.sleep(10)
 if __name__ =='__main__':
          try:

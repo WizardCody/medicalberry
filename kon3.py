@@ -5,7 +5,7 @@ import time
 import smtplib
 import datetime
 import linecache
-import MySQLdb
+#import MySQLdb
 
 wiersz1 = linecache.getline('haslo.txt',1)
 wiersz2 = linecache.getline('haslo.txt',2)
@@ -43,20 +43,19 @@ def appendFile(now):
         file.write(now + " Drzwi otwarte \r\n")
         file.close()
 
-def insert_to_db(value):
-        db = MySQLdb.connect(host = "89.76.123.181", user = "malinka", passwd = "123123123", db = "hssystem")
-        cur = db.cursor()
-        params = [value]
+#def insert_to_db(value):
+#        db = MySQLdb.connect(host = "89.76.123.181", user = "malinka", passwd = "123123123", db = "hssystem")       cur = db.cursor()
+ #       params = [value]
 #       print (params)
-        try:
-                cur.execute("INSERT INTO hssystem.kontrakton (data, Wartosc) VALUES (NOW(),%s)", params)
-                db.commit()
-                print ("Dodano do bazy")
-        except MySQLdb.Error, e:
-                print ("Wystapil blad. %s" %e)
-        finally:
-                cur.close()
-                db.close()
+  #      try:
+   #             cur.execute("INSERT INTO hssystem.kontrakton (data, Wartosc) VALUES (NOW(),%s)", params)
+    #            db.commit()
+     #           print ("Dodano do bazy")
+      #  except MySQLdb.Error, e:
+        #        print ("Wystapil blad. %s" %e)
+        #finally:
+          #      cur.close()
+           #     db.close()
 
 
 def getTime():
@@ -77,13 +76,13 @@ def main():
                         #print(test)
                         sendEmail()
                         appendFile(timestamp)
-                        insert_to_db(door)
+             #           insert_to_db(door)
                         time.sleep(9)
                 else:
                         door = doorState[0]
                         print (door)
                         timestamp = getTime()
-                        insert_to_db(door)
+              #          insert_to_db(door)
                         time.sleep(5)
 
 if __name__=='__main__':
@@ -93,6 +92,7 @@ if __name__=='__main__':
                 except KeyboardInterrupt:
                    pass
 GPIO.cleanup()
+
 
 
 
