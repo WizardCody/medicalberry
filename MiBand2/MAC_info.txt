@@ -1,0 +1,2 @@
+Ours MiBand2 MAC address is:
+C3:B4:25:B0:91:FA
