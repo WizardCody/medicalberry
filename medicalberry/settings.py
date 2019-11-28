@@ -25,7 +25,9 @@ SECRET_KEY = '^1(hd$b6ej9a=i0-6v9qi#7!i2zpbxp6ex-_26ic*1ko*8^$15'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "192.168.0.10", "192.168.0.80", "192.168.43.231"]
+
+ALLOWED_HOSTS = []
+ALLOWED_CIDR_NETS = ['192.168.0.0/16']
 
 
 # Application definition
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'allow_cidr.middleware.AllowCIDRMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

@@ -9,3 +9,4 @@ pip3 install django-jet
 pip3 install libsass
 pip3 install feedparser
 pip3 install mysqlclient
+pip3 install django-allow-cidr
