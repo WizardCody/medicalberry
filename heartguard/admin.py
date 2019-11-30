@@ -6,21 +6,25 @@ from django.db.models.functions import TruncMinute
 import json
 
 
-from .models import Heartrate, Device
+from .models import Heartrate, Device, DeviceType
 
 # Register your models here.
 class DeviceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'MAC_address')
+    list_display = ('name', 'type', 'MAC_address')
 
-    search_fields = ['name', 'MAC_address']
+    search_fields = ['name', 'type__name', 'MAC_address']
 
 class HeartrateAdmin(admin.ModelAdmin):
-    list_display = ('device', 'value', 'event_time')
+    
+    readonly_fields = ('device_type',)
+
+    list_display = ('device', 'device_type', 'value', 'event_time')
 
     list_filter = ['event_time']
 
     search_fields = ['device__name', 'value']
 	
+    
     def changelist_view(self, request, extra_context=None):
     
         chart_data = (
@@ -39,3 +43,5 @@ class HeartrateAdmin(admin.ModelAdmin):
 
 admin.site.register(Heartrate, HeartrateAdmin)
 admin.site.register(Device, DeviceAdmin)
+
+admin.site.register(DeviceType)
