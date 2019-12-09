@@ -1,0 +1,73 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const ctx = document.getElementById('myChart').getContext('2d');
+
+  // Sample data
+  const chartData = {{ chart_data | safe }};
+
+  // Parse the dates to JS
+  chartData.forEach((d) => {
+    d.x = new Date(d.date);
+  });
+
+  // Render the chart
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'Kontrakton',
+          data: chartData,
+          backgroundColor: 'rgba(20,20,220,0.5)',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        xAxes: [
+          {
+            type: 'time',
+            time: {
+              unit: 'minute',
+              round: 'minute',
+              displayFormats: {
+                day: 'h:mm:ss a',
+              },
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    },
+  });
+});
+</script>
+
+
+{% endblock %}
+
+{% block object-tools %}
+
+<h1>Kontrakton/h1>
+
+<div style="width: 100%;">
+  <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="myChart"></canvas>
+</div>
+
+{{ block.super }}
+{% endblock %}

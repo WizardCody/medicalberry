@@ -45,3 +45,4 @@ admin.site.register(Heartrate, HeartrateAdmin)
 admin.site.register(Device, DeviceAdmin)
 
 admin.site.register(DeviceType)
+
