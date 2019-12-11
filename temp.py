@@ -6,8 +6,10 @@ import smtplib
 import datetime
 import linecache
 import os, sys
+import requests
 
-# PARENT DIRECTORY PATH
+
+# DJANGO setup
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "medicalberry.settings")
 
@@ -16,12 +18,10 @@ django.setup()
 
 from homeguard.models import Device, Kontrakton
 
-# PRINT ALL HEARTRATES
-
-# GET DEVICE
 current_Device = Device.objects.get(pk=1)
 
 from django.utils import timezone
+
 
 wiersz1 = linecache.getline('haslo.txt',1)
 wiersz2 = linecache.getline('haslo.txt',2)
@@ -32,25 +32,41 @@ smtpPass = wiersz2
 toAdd = wiersz3
 fromAdd = smtpUser
 
-subject = 'Test otwartych drzwi'
+subject = 'Medicalberry warning!'
 header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
-body = 'Zamknij drzwi'
+body = 'Close your doors'
 
 door_pin = 21
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(door_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-doorState = ["Drzwi zamkniete", "Drzwi otwarte"]
+doorState = ["Doors are closed", "Doors are open"]
 
 def sendEmail():
+        subject = 'Medicalberry warning!'
+        header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
+        body = 'Close your doors'
         s = smtplib.SMTP('smtp.gmail.com', 587)
         s.ehlo()
         s.starttls()
         s.ehlo()
         s.login(str(smtpUser), str(smtpPass))
         s.sendmail(fromAdd, toAdd, header, body)
+        print ('E-mail has been sent')
         s.quit()
+        
+def telegram_bot_sendtext(bot_message):
+    
+    #bot_token - api token
+    bot_token = '848324519:AAF2Q1Jwf8VcfuiZUw0dhmcW8OUZm4B6o7A'
+    #bot_chatID - recivers ID
+    bot_chatID = '997740378'
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+
+    response = requests.get(send_text)
+
+    return response.json()
 
 def main():
         #init()
@@ -61,6 +77,8 @@ def main():
                         sendEmail()
                         print(Kontrakton.objects.all())
                         Kontrakton(device=current_Device, value=True, event_time=timezone.now()).save()
+                        telegram_message = telegram_bot_sendtext("Warning, check medicalberry panel!")
+                        print(telegram_message)
                         time.sleep(60)
                 else:
                         door = doorState[0]
@@ -68,7 +86,7 @@ def main():
                         print (Kontrakton.objects.all())
                         Kontrakton(device=current_Device, value=False, event_time=timezone.now()).save()
                         time.sleep(60)
-
+    
 if __name__=='__main__':
                 try:
                    main()
