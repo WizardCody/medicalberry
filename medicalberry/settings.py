@@ -27,7 +27,7 @@ DEBUG = True
 
 
 ALLOWED_HOSTS = []
-ALLOWED_CIDR_NETS = ['192.168.0.0/16', '25.0.0.0/8']
+ALLOWED_CIDR_NETS = ['192.168.0.0/16', '25.0.0.0/8',  '10.0.0.0/8']
 
 
 # Application definition

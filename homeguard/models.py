@@ -28,15 +28,3 @@ class Kontrakton(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.device, self.value)
-
-class Gas(models.Model):
-    device = models.ForeignKey(Device, on_delete=models.CASCADE)
-    value = models.FloatField(max_digits=3, decimal_places=0)
-    event_time = models.DateTimeField('time of event')
-    
-    def device_type(self):
-        return self.device.type
-    device_type.short_description = 'Type'
-
-    def __str__(self):
-        return '%s %s' % (self.device, self.value)

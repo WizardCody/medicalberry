@@ -41,8 +41,6 @@ door_pin = 21
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(door_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-file = open("log.txt","w+")
-
 doorState = ["Drzwi zamkniete", "Drzwi otwarte"]
 
 def sendEmail():
@@ -50,20 +48,9 @@ def sendEmail():
         s.ehlo()
         s.starttls()
         s.ehlo()
-        s.login(smtpUser, smtpPass)
-        s.sendmail(fromAdd, toAdd, header + '\n' + body)
+        s.login(str(smtpUser), str(smtpPass))
+        s.sendmail(fromAdd, toAdd, header, body)
         s.quit()
-
-def appendFile(now):
-        file = open("log.txt","a+")
-        file.write(now + " Drzwi otwarte \r\n")
-        file.close()
-
-def getTime():
-        now = datetime.datetime.now()
-        timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-        print(timestamp)
-        return timestamp
 
 def main():
         #init()
@@ -71,17 +58,14 @@ def main():
                 if GPIO.input(door_pin):
                         door = doorState[1]
                         print (door)
-                        timestamp = getTime()
                         sendEmail()
-                        appendFile(timestamp)
                         print(Kontrakton.objects.all())
                         Kontrakton(device=current_Device, value=True, event_time=timezone.now()).save()
                         time.sleep(60)
                 else:
                         door = doorState[0]
                         print (door)
-                        timestamp = getTime()
-                        print(Kontrakton.objects.all())
+                        print (Kontrakton.objects.all())
                         Kontrakton(device=current_Device, value=False, event_time=timezone.now()).save()
                         time.sleep(60)
 
