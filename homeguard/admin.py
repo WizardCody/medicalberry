@@ -10,18 +10,18 @@ from .models import Device, Kontrakton, DeviceType, Gas
 # Register your models here.
 
 class DeviceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'MAC_address')
+    list_display = ('id', 'name', 'MAC_address')
 
-    search_fields = ['name', 'MAC_address']
+    search_fields = ['id', 'name', 'MAC_address']
     
 class KontraktonAdmin(admin.ModelAdmin):
     readonly_fields = ('device_type',)
     
-    list_display = ('device', 'device_type', 'value', 'event_time',)
+    list_display = ('id', 'device', 'device_type', 'value', 'event_time',)
     
     list_filter = ['event_time']
     
-    search_fields = ['device_name', 'value']
+    search_fields = ['id', 'device_name', 'value']
     
     def changelist_view(self, request, extra_context=None):
         chart_data = (
@@ -38,11 +38,11 @@ class KontraktonAdmin(admin.ModelAdmin):
 class GasAdmin(admin.ModelAdmin):
     readonly_fields = ('device_type',)
     
-    list_display = ('device', 'device_type', 'value', 'event_time',)
+    list_display = ('id', 'device', 'device_type', 'value', 'event_time',)
     
     list_filter = ['event_time']
     
-    search_fields = ['device_name', 'value']
+    search_fields = ['id', 'device_name', 'value']
     
     def changelist_view(self, request, extra_context=None):
         chart_data = (

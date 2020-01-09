@@ -4,7 +4,7 @@ import smtplib
 import datetime
 import linecache
 import os, sys
-
+import requests
 
 wiersz1 = linecache.getline('haslo.txt',1)
 wiersz2 = linecache.getline('haslo.txt',2)
@@ -34,7 +34,7 @@ django.setup()
 
 from homeguard.models import Device, Gas
 
-current_Device = Device.objects.get(pk=1)
+current_Device = Device.objects.get(pk=2)
 
 from django.utils import timezone
 
@@ -85,7 +85,7 @@ def readadc(adcnum, clockpin, mosipin, misopin, cspin):
 
 def sendEmail():
     subject = 'Medicalberry warning!'
-    header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
+    #header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
     body = 'Gas is releasing'
     
     s = smtplib.SMTP('smtp.gmail.com', 587)
@@ -93,10 +93,31 @@ def sendEmail():
     s.starttls()
     s.ehlo()
     s.login(str(smtpUser), str(smtpPass))
-    s.sendmail(fromAdd, toAdd, header, body)
+    
+    from email.message import EmailMessage
+    
+    msg = EmailMessage()
+    msg['Subject'] = subject
+    msg['To'] = toAdd
+    msg['From'] = fromAdd
+    msg.set_content(body)
+    
+    s.send_message(msg)
+    
     print ('E-mail has been sent')
     s.quit()
     
+def telegram_bot_sendtext(bot_message):
+    
+    #bot_token - api token
+    bot_token = '848324519:AAF2Q1Jwf8VcfuiZUw0dhmcW8OUZm4B6o7A'
+    #bot_chatID - recivers ID
+    bot_chatID = '-336603765'
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+
+    response = requests.get(send_text)
+
+    return response.json()
 
 def main():
          init()
@@ -113,6 +134,7 @@ def main():
                           print("Voltage value measured = " + str("%.2f" % ((COlevel / 1024.) * 5)) + " V")
                           print("CO in air(%): " + str("%.2f" % ((COlevel / 1024.) * 100)) + " %")
                           sendEmail()
+                          telegram_bot_sendtext("Warning! Gas is releasing! Check medicalberry panel!")
                           temp = str("%.2f" % ((COlevel / 1024.) * 100))
                           print("CO in air(%): " + temp + " %")
                           Gas(device=current_Device, value=temp, event_time=timezone.now()).save()  
