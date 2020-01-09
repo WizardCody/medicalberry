@@ -108,17 +108,14 @@ def main():
                   if GPIO.input(mq7_dpin):
                           print("No CO found")
                           time.sleep(0.5)
-                          temp = str("%.2f" % ((COlevel / 1024.) * 100))
-                          print("CO in air(%): " + temp + " %")
-                          Gas(device=current_Device, value=temp, event_time=timezone.now()).save()
                   else:
                           print("CO found")
                           print("Voltage value measured = " + str("%.2f" % ((COlevel / 1024.) * 5)) + " V")
                           print("CO in air(%): " + str("%.2f" % ((COlevel / 1024.) * 100)) + " %")
-                          now = datetime.datetime.now()
-                          test = now.strftime("%Y-%m-%d %H:%M:%S")
-                          print (test)
                           sendEmail()
+                          temp = str("%.2f" % ((COlevel / 1024.) * 100))
+                          print("CO in air(%): " + temp + " %")
+                          Gas(device=current_Device, value=temp, event_time=timezone.now()).save()  
                           time.sleep(10)
 if __name__ =='__main__':
          try:
