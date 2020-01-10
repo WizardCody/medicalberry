@@ -65,18 +65,32 @@ from heartguard.models import Device, Heartrate
 current_Device = Device.objects.get(id=1)
 
 def send_to_db(rate):
+
+    # GET DEVICE
+    current_Device.refresh_from_db()
+
     hr = Heartrate(device=current_Device, value=rate, event_time=timezone.now())
     
     if rate > current_Device.patient.max_heartrate:
         hr.status = False
         warning = ("Heartrate too high!\npatient: " + str(current_Device.patient) + "\ndevice: " + str(current_Device).replace("_"," ") + "\nrate: " + str(rate))
-        telegram_bot_sendtext(warning)
-        sendEmail(warning)
+        
+        
+        if current_Device.patient.notify_telegram:
+            telegram_bot_sendtext(warning)
+            
+        if current_Device.patient.notify_mail:
+            sendEmail(warning)
+            
     elif rate < current_Device.patient.min_heartrate:
         hr.status = False
         warning = ("Heartrate too low!\npatient: " + str(current_Device.patient) + "\ndevice: " + str(current_Device).replace("_"," ") + "\nrate: " + str(rate))
-        telegram_bot_sendtext(warning)
-        sendEmail(warning)
+        
+        if current_Device.patient.notify_telegram:
+            telegram_bot_sendtext(warning)
+            
+        if current_Device.patient.notify_mail:
+            sendEmail(warning)
     
     hr.save()
     print(hr)
