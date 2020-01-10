@@ -5,6 +5,8 @@ import time
 import smtplib
 import datetime
 import linecache
+
+import os, sys
 #import MySQLdb
 
 wiersz1 = linecache.getline('haslo.txt',1)
@@ -28,6 +30,18 @@ GPIO.setup(door_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 file = open("log.txt","w+")
 
 doorState = ["Drzwi zamkniete", "Drzwi otwarte"]
+
+#
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "medicalberry.settings")
+
+import django
+django.setup()
+
+from homeguard.models import Device, Kontrakton
+print(Kontrakton.objects.all())
+current_Device = Device.objects.get(pk=1)
+from django.utils import timezone
 
 def sendEmail():
         s = smtplib.SMTP('smtp.gmail.com', 587)
@@ -74,14 +88,18 @@ def main():
                         #now = datetime.datetime.now()
                         #test = now.strftime("%Y-%m-%d %H:%M:%S")
                         #print(test)
-                        sendEmail()
-                        appendFile(timestamp)
+                    #    sendEmail()
+                    #    appendFile(timestamp)
+                        Kontrakton(device=current_Device, value=False, event_time=timezone.now()).save()
              #           insert_to_db(door)
                         time.sleep(9)
                 else:
                         door = doorState[0]
                         print (door)
                         timestamp = getTime()
+                        Kontrakton(device=current_Device, value=True, event_time=timezone.now()).save()
+                        print("asdf")
+
               #          insert_to_db(door)
                         time.sleep(5)
 

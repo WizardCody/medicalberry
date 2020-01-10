@@ -14,6 +14,11 @@ class DeviceAdmin(admin.ModelAdmin):
 
     search_fields = ['id', 'name', 'MAC_address']
     
+class DeviceTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+    search_fields = ['id', 'name']
+    
 class KontraktonAdmin(admin.ModelAdmin):
     readonly_fields = ('device_type',)
     
@@ -59,5 +64,4 @@ class GasAdmin(admin.ModelAdmin):
 admin.site.register(Kontrakton, KontraktonAdmin)
 admin.site.register(Gas, KontraktonAdmin)
 admin.site.register(Device, DeviceAdmin)
-
-admin.site.register(DeviceType)
+admin.site.register(DeviceType, DeviceTypeAdmin)

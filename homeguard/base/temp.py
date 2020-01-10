@@ -10,7 +10,7 @@ import requests
 
 
 # DJANGO setup
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "medicalberry.settings")
 
 import django
@@ -83,15 +83,15 @@ def main():
                         door = doorState[1]
                         print (door)
                         sendEmail()
-                        print(Kontrakton.objects.all())
+                        #print(Kontrakton.objects.all())
                         Kontrakton(device=current_Device, value=True, event_time=timezone.now()).save()
                         telegram_message = telegram_bot_sendtext("Warning! Some windows are open! Check medicalberry panel!")
-                        print(telegram_message)
+                        #print(telegram_message)
                         time.sleep(60)
                 else:
                         door = doorState[0]
                         print (door)
-                        print (Kontrakton.objects.all())
+                        #print (Kontrakton.objects.all())
                         Kontrakton(device=current_Device, value=False, event_time=timezone.now()).save()
                         time.sleep(60)
     

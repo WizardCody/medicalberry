@@ -10,6 +10,7 @@ pip3 install libsass
 pip3 install feedparser
 pip3 install mysqlclient
 pip3 install django-allow-cidr
+pip3 install gunicorn
 
-
-# to do: setup nginx service
+sudo apt-get install nginx
+# to do: setup nginx service, make links

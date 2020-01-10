@@ -2,25 +2,41 @@ import RPi.GPIO as GPIO
 import time
 import smtplib
 import datetime
+import linecache
+import os, sys
+import requests
 
+wiersz1 = linecache.getline('haslo.txt',1)
+wiersz2 = linecache.getline('haslo.txt',2)
+wiersz3 = linecache.getline('haslo.txt',3)
 
-
-
-smtpUser = 'ZPItest1111@gmail.com'
-smtpPass = 'ZPItest1'
-toAdd = 'laizer96@gmail.com'
+smtpUser = wiersz1
+smtpPass = wiersz2
+toAdd = wiersz3
 fromAdd = smtpUser
 
-subject = 'Wylacz gaz'
-header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
-body = 'Wylac gaz '
 
+#pins setup
 SPICLK = 11
 SPIMISO = 9
 SPIMOSI = 10
 SPICS = 8
 mq7_dpin = 26
 mq7_apin = 0
+
+
+# DJANGO setup
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "medicalberry.settings")
+
+import django
+django.setup()
+
+from homeguard.models import Device, Gas
+
+current_Device = Device.objects.get(pk=2)
+
+from django.utils import timezone
 
 #port init
 def init():
@@ -66,44 +82,62 @@ def readadc(adcnum, clockpin, mosipin, misopin, cspin):
 
         adcout >>= 1       # first bit is 'null' so drop it
         return adcout
-#main ioop
-file = open ('gas.txt', 'w+')
-
 
 def sendEmail():
+    subject = 'Medicalberry warning!'
+    #header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
+    body = 'Gas is releasing'
+    
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.ehlo()
     s.starttls()
     s.ehlo()
-    s.login(smtpUser, smtpPass)
-    s.sendmail(fromAdd, toAdd, header + '\n' + body)
+    s.login(str(smtpUser), str(smtpPass))
+    
+    from email.message import EmailMessage
+    
+    msg = EmailMessage()
+    msg['Subject'] = subject
+    msg['To'] = toAdd
+    msg['From'] = fromAdd
+    msg.set_content(body)
+    
+    s.send_message(msg)
+    
+    print ('E-mail has been sent')
     s.quit()
+    
+def telegram_bot_sendtext(bot_message):
+    
+    #bot_token - api token
+    bot_token = '848324519:AAF2Q1Jwf8VcfuiZUw0dhmcW8OUZm4B6o7A'
+    #bot_chatID - recivers ID
+    bot_chatID = '-336603765'
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
 
-def appendFile(now):
-        file = open("log.txt", "a+")
-        file.write(now + " Drzwi otwarte \r\n")
-        file.close()
+    response = requests.get(send_text)
 
+    return response.json()
 
 def main():
          init()
-         print("Prosze czekac...")
+         print("Please wait, Gas sensor is calibrating...")
          time.sleep(20)
          while True:
                   COlevel=readadc(mq7_apin, SPICLK, SPIMOSI, SPIMISO, SPICS)
-                  if GPIO.input(mq7_dpin):
-                          print("Nie wykryto CO")
-                          time.sleep(0.5)
 
+                  if GPIO.input(mq7_dpin):
+                          print("No CO found")
+                          time.sleep(1.0)
                   else:
-                          print("Wykryto CO")
-                          print("Zmierzona wartosc napiecia = " + str("%.2f" % ((COlevel / 1024.) * 5)) + " V")
-                          print("Procent CO w powietrzu: " + str("%.2f" % ((COlevel / 1024.) * 100)) + " %")
-                          now = datetime.datetime.now()
-                          test = now.strftime("%Y-%m-%d %H:%M:%S")
-                          print (test)
+                          print("CO found")
+                          print("Voltage value measured = " + str("%.2f" % ((COlevel / 1024.) * 5)) + " V")
+                          print("CO in air(%): " + str("%.2f" % ((COlevel / 1024.) * 100)) + " %")
                           sendEmail()
-                          #appendFile(test)
+                          telegram_bot_sendtext("Warning! Gas is releasing! Check medicalberry panel!")
+                          temp = str("%.2f" % ((COlevel / 1024.) * 100))
+                          print("CO in air(%): " + temp + " %")
+                          Gas(device=current_Device, value=temp, event_time=timezone.now()).save()  
                           time.sleep(10)
 if __name__ =='__main__':
          try:

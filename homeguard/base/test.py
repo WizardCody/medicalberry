@@ -7,14 +7,20 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "medicalberry.settings")
 import django
 django.setup()
 
-from homeguard.models import Device, Kontrakton
+from homeguard.models import Device, DeviceType, Gas
 
 # PRINT ALL HEARTRATES
-print(Kontrakton.objects.all())
+print(Gas.objects.all())
 
 # GET DEVICE
-#current_Device = Device.objects.get(MAC_address="C3:B4:25:B0:91:FA")
-
+#print(current_Device)
 # INSERT HEARTRATE
 from django.utils import timezone
-Kontrakton(device=current_Device, value=true, event_time=timezone.now()).save()
+
+DeviceType(name='Gas').save()
+temp = DeviceType.objects.get(pk=1)
+print(temp)
+Device(name='MQ7', type=temp, MAC_address='5a:93:fc:93:a1:59').save()
+current_Device = Device.objects.get(pk=1)
+print(current_Device)
+Gas(device=current_Device, value=45.24, event_time=timezone.now()).save()

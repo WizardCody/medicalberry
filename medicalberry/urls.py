@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.utils.html import format_html
 
-admin.site.site_header = "MedicalBerry Admin"
+admin.site.site_header = format_html("<font color='lightgreen'>Medical</font><font color='lightblue'>berry</font>")
 admin.site.site_title = "MedicalBerry Admin Portal"
 admin.site.index_title = "Welcome to MedicalBerry Portal"
 
