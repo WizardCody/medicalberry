@@ -20,13 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^1(hd$b6ej9a=i0-6v9qi#7!i2zpbxp6ex-_26ic*1ko*8^$15'
+with open('/etc/secret_key.txt') as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 ALLOWED_CIDR_NETS = ['192.168.0.0/16', '25.0.0.0/8',  '10.0.0.0/8']
 
 
@@ -132,7 +133,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "medicalberry/static"),
@@ -141,3 +142,16 @@ STATICFILES_DIRS = [
 # JET CONFIG
 
 JET_DEFAULT_THEME = 'medicalberry'
+
+# HTTPS
+
+#SECURE_SSL_REDIRECT = True
+#CSRF_COOKIE_SECURE = True
+#SESSION_COOKIE_SECURE = True
+#SECURE_CONTENT_TYPE_NOSNIFF = True
+#SECURE_BROWSER_XSS_FILTER = True
+#X_FRAME_OPTIONS = 'DENY'
+
+#SECURE_HSTS_SECONDS = 60
+#SECURE_HSTS_PRELOAD = True
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True

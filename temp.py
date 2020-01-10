@@ -85,7 +85,7 @@ def main():
                         sendEmail()
                         print(Kontrakton.objects.all())
                         Kontrakton(device=current_Device, value=True, event_time=timezone.now()).save()
-                        telegram_message = telegram_bot_sendtext("Warning! Window is open! Check medicalberry panel!")
+                        telegram_message = telegram_bot_sendtext("Warning! Some windows are open! Check medicalberry panel!")
                         print(telegram_message)
                         time.sleep(60)
                 else:
