@@ -8,24 +8,42 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const ctx = document.getElementById('myChart').getContext('2d');
 
-  // Sample data
-  const chartData = {{ chart_data | safe }};
+  const ctx1 = document.getElementById('myChart').getContext('2d');
+  const chartData1 = {{ chart_data_avg | safe }};
+  const chartData2 = {{ chart_data_min | safe }};
+  const chartData3 = {{ chart_data_max | safe }};
 
+  
   // Parse the dates to JS
-  chartData.forEach((d) => {
+  chartData1.forEach((d) => {
     d.x = new Date(d.date);
   });
-
+  chartData2.forEach((d) => {
+    d.x = new Date(d.date);
+  });
+  chartData3.forEach((d) => {
+    d.x = new Date(d.date);
+  });
+  
   // Render the chart
-  const chart = new Chart(ctx, {
+  const chart = new Chart(ctx1, {
     type: 'line',
     data: {
       datasets: [
         {
-          label: 'Heartrate',
-          data: chartData,
+          label: 'Average Heartrate',
+          data: chartData1,
+          backgroundColor: 'rgba(20,220,20,0.5)',
+        },
+        {
+          label: 'Lowest Heartrate',
+          data: chartData2,
+          backgroundColor: 'rgba(220,20,20,0.5)',
+        },
+        {
+          label: 'Highest Heartrate',
+          data: chartData3,
           backgroundColor: 'rgba(20,20,220,0.5)',
         },
       ],
@@ -55,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     },
   });
+  
 });
 </script>
 
@@ -63,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 {% block object-tools %}
 
-<h1>Average Heartrate</h1>
+<h1>Chart</h1>
 
 <div style="width: 100%;">
   <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="myChart"></canvas>

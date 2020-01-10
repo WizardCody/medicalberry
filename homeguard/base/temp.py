@@ -32,9 +32,7 @@ smtpPass = wiersz2.strip()
 toAdd = wiersz3.strip()
 fromAdd = smtpUser.strip()
 
-subject = 'Medicalberry warning!'
-header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
-body = 'Close your doors'
+
 
 door_pin = 21
 
@@ -44,6 +42,9 @@ GPIO.setup(door_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 doorState = ["Doors are closed", "Doors are open"]
 
 def sendEmail():
+
+        subject = 'Medicalberry warning!'
+        body = 'Close your doors'
 
         s = smtplib.SMTP('smtp.gmail.com', 587)
         s.ehlo()

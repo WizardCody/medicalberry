@@ -85,7 +85,6 @@ def readadc(adcnum, clockpin, mosipin, misopin, cspin):
 
 def sendEmail():
     subject = 'Medicalberry warning!'
-    #header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
     body = 'Gas is releasing'
     
     s = smtplib.SMTP('smtp.gmail.com', 587)

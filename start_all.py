@@ -9,6 +9,8 @@ processes = []
 processes.append(subprocess.Popen(['python3', 'homeguard/base/temp.py'], stderr=sys.stderr, stdout=sys.stdout))
 processes.append(subprocess.Popen(['python3', 'homeguard/base/mq-7.py'], stderr=sys.stderr, stdout=sys.stdout))
 
+processes.append(subprocess.Popen(['python3', 'heartguard/start.py'], stderr=sys.stderr, stdout=sys.stdout))
+
 
 def kill_children():
     for process in processes:
