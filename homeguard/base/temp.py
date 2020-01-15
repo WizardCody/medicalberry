@@ -88,13 +88,13 @@ def main():
                         Kontrakton(device=current_Device, value=True, event_time=timezone.now()).save()
                         telegram_message = telegram_bot_sendtext("Warning! Some windows are open! Check medicalberry panel!")
                         #print(telegram_message)
-                        time.sleep(60)
+                        time.sleep(10)
                 else:
                         door = doorState[0]
                         print (door)
                         #print (Kontrakton.objects.all())
                         Kontrakton(device=current_Device, value=False, event_time=timezone.now()).save()
-                        time.sleep(60)
+                        time.sleep(10)
     
 if __name__=='__main__':
                 try:
