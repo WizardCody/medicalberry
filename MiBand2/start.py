@@ -10,11 +10,13 @@ import smtplib
 wiersz1 = linecache.getline('haslo.txt',1)
 wiersz2 = linecache.getline('haslo.txt',2)
 wiersz3 = linecache.getline('haslo.txt',3)
+wiersz4 = linecache.getline('haslo.txt',4)
 
 smtpUser = wiersz1.strip()
 smtpPass = wiersz2.strip()
 toAdd = wiersz3.strip()
 fromAdd = smtpUser.strip()
+botToken = wiersz4.strip()
 
 def sendEmail(body):
 
@@ -43,7 +45,7 @@ import requests
 def telegram_bot_sendtext(bot_message):
         
     #bot_token - api token
-    bot_token = '848324519:AAF2Q1Jwf8VcfuiZUw0dhmcW8OUZm4B6o7A'
+    bot_token = botToken
     #bot_chatID - recivers ID
     bot_chatID = '-336603765'
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message

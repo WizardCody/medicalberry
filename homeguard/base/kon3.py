@@ -13,10 +13,10 @@ wiersz1 = linecache.getline('haslo.txt',1)
 wiersz2 = linecache.getline('haslo.txt',2)
 wiersz3 = linecache.getline('haslo.txt',3)
 
-smtpUser = wiersz1
-smtpPass = wiersz2
-toAdd = wiersz3
-fromAdd = smtpUser
+smtpUser = wiersz1.strip()
+smtpPass = wiersz2.strip()
+toAdd = wiersz3.strip()
+fromAdd = smtpUser.strip()
 
 subject = 'Test otwartych drzwi'
 header = 'Do: ' + toAdd + '\n'  + 'Od: ' + fromAdd + '\n' + 'Temat: ' + subject
@@ -57,19 +57,7 @@ def appendFile(now):
         file.write(now + " Drzwi otwarte \r\n")
         file.close()
 
-#def insert_to_db(value):
-#        db = MySQLdb.connect(host = "89.76.123.181", user = "malinka", passwd = "123123123", db = "hssystem")       cur = db.cursor()
- #       params = [value]
-#       print (params)
-  #      try:
-   #             cur.execute("INSERT INTO hssystem.kontrakton (data, Wartosc) VALUES (NOW(),%s)", params)
-    #            db.commit()
-     #           print ("Dodano do bazy")
-      #  except MySQLdb.Error, e:
-        #        print ("Wystapil blad. %s" %e)
-        #finally:
-          #      cur.close()
-           #     db.close()
+
 
 
 def getTime():
